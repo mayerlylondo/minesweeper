@@ -35,3 +35,11 @@ body {
 .textoDeGameOver.mostrar{
     visibility: visible;
 }
+
+.textoDeVictoria{
+    visibility: hidden;
+}
+
+.textoDeVictoria.mostrar{
+    visibility: visible;
+}
