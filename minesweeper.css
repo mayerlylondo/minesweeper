@@ -1,0 +1,37 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#tablero{
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.celda{
+    display: table-cell; /* Coloca las celdas en linea */
+    padding: 10px; 
+    border: 1px solid black;
+    margin: 0;
+    width: 25px;
+    cursor: pointer;
+}
+
+.celda:hover{
+    background-color: rgba(0, 0, 0, 0.2)
+}
+
+.comienzaDeNuevo{
+    padding: 5px;
+    margin-top: 10px;
+}
+
+.textoDeGameOver{
+    visibility: hidden;
+}
+
+.textoDeGameOver.mostrar{
+    visibility: visible;
+}
