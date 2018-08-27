@@ -1,5 +1,6 @@
 // Datos
 var filas = [];
+var numeroDeMinas = 0;
 
 // Retorna un número aleatorio para fila
 function elegirFilaRandomParaMina(numeroFilas) {
@@ -217,6 +218,7 @@ function colocarNumeros(numeroFilas, numeroColumnas) {
 function actualizaTablero(numeroFilas, numeroColumnas, perdimos = false) {
     var tablero = document.getElementById("tablero");
     var textoDeGameOver = document.getElementById("textoDeGameOver");
+    var textoDeVictoria = document.getElementById("textoDeVictoria");
     tablero.innerHTML = '';
     tablero.oncontextmenu = function () { return false }
     for (var i = 0; i < numeroFilas; i++) {
@@ -225,7 +227,6 @@ function actualizaTablero(numeroFilas, numeroColumnas, perdimos = false) {
         nuevaFila.setAttribute("id", "fila" + i);
         tablero.appendChild(nuevaFila);
     }
-
     for (var i = 0; i < numeroFilas; i++) {
         var fila = document.getElementById(("fila" + i))
         for (var j = 0; j < numeroColumnas; j++) {
@@ -254,6 +255,30 @@ function actualizaTablero(numeroFilas, numeroColumnas, perdimos = false) {
             textoDeGameOver.classList.remove("mostrar");
         }
     }
+    if (verificarVictoria(numeroFilas, numeroColumnas)){
+        textoDeVictoria.className += " mostrar"
+    } else {
+        if(textoDeVictoria.classList.contains("mostrar")){
+            textoDeVictoria.classList.remove("mostrar");
+        }
+    }
+}
+
+// Cada vez que se actualice la pantalla, verificamos si todas las minas están marcadas
+function verificarVictoria(numeroFilas, numeroColumnas){
+    var ganamos = false;
+    var minasMarcadas = 0
+    for (var i = 0; i < numeroFilas; i++) {
+        for (var j = 0; j < numeroColumnas; j++) {
+            if(filas[i][j].estado == 'marcado' && filas[i][j].contenido == 'mina'){
+                minasMarcadas++;
+            }
+        }
+    }
+    if(minasMarcadas == numeroDeMinas){
+        ganamos = true;
+    }
+    return ganamos;
 }
 
 // Destapa todas las celdas de un tablero y muestra un mensaje
@@ -298,7 +323,7 @@ function manejarClicDeBanderita(indiceFila, indiceColumna, numeroFilas, numeroCo
 }
 
 // Se rellena el modelo del tablero
-function fabricarCeldas(numeroFilas, numeroColumnas, numeroMinas) {
+function fabricarCeldas(numeroFilas, numeroColumnas) {
     // Fabricar Celdas (de momento vacias)
     for (var i = 0; i < numeroFilas; i++) {
         var celdas = [];
@@ -313,7 +338,7 @@ function fabricarCeldas(numeroFilas, numeroColumnas, numeroMinas) {
     }
     // Llenar Minas
     var iteradorMinas = 0;
-    while (iteradorMinas < numeroMinas) {
+    while (iteradorMinas < numeroDeMinas) {
         var indiceFilaMina = elegirFilaRandomParaMina(numeroFilas);
         var indiceColumnaMina = elegirColumnaRandomParaMina(numeroColumnas);
         if (!aquiHayMina(indiceFilaMina, indiceColumnaMina)) {
@@ -328,14 +353,15 @@ function fabricarCeldas(numeroFilas, numeroColumnas, numeroMinas) {
 }
 
 function iniciarPrograma() {
-    var numeroDeFilas = prompt("¿Cuantas filas tendrá el juego?");
-    var numeroDeColumnas = prompt("¿Cuantas columnas tendrá el juego?");
-    var numeroDeMinas = prompt("¿Cuantas minas tendrá el juego?");
+    var numeroFilasUsuario = prompt("¿Cuantas filas tendrá el juego?");
+    var numeroColumnasUsuario = prompt("¿Cuantas columnas tendrá el juego?");
+    var numeroMinasUsuario = prompt("¿Cuantas minas tendrá el juego?");
 
-    if (!isNaN(numeroDeFilas) && !isNaN(numeroDeColumnas) && !isNaN(numeroDeMinas)
-         && numeroDeFilas != null && numeroDeColumnas != null && numeroDeMinas != null
-         && numeroDeFilas != '' && numeroDeColumnas != '' && numeroDeMinas != ''  ) {
-        fabricarCeldas(numeroDeFilas, numeroDeColumnas, numeroDeMinas);
+    if (!isNaN(numeroFilasUsuario) && !isNaN(numeroColumnasUsuario) && !isNaN(numeroMinasUsuario)
+         && numeroFilasUsuario != null && numeroColumnasUsuario != null && numeroMinasUsuario != null
+         && numeroFilasUsuario != '' && numeroColumnasUsuario != '' && numeroMinasUsuario != ''  ) {
+        numeroDeMinas = numeroMinasUsuario;
+        fabricarCeldas(numeroFilasUsuario, numeroColumnasUsuario);
     } else {
         alert('No todos los valores digitados son numeros. Por favor haga clic en "Comienza de nuevo"')
     }
@@ -346,6 +372,7 @@ function iniciarPrograma() {
 var botonComienzaDeNuevo = document.getElementsByClassName("comienzaDeNuevo")[0];
 botonComienzaDeNuevo.addEventListener("click", function () {
     filas = [];
+    numeroDeMinas = 0
     iniciarPrograma();
 });
 
